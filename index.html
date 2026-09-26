@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -8,51 +9,135 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="hero">
-    <div class="container">
-      <div class="brand">Gerência Executiva de Concessão de Direitos e Vantagens</div>
-      <h1>Central de Orientações</h1>
-      <p>Encontre respostas para as dúvidas mais frequentes.</p>
-
-      <label class="search">
-        <span aria-hidden="true">⌕</span>
-        <input id="searchInput" type="search" placeholder="Digite uma dúvida ou palavra-chave..." autocomplete="off">
-      </label>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="./" aria-label="Central de Orientações GEDIV">
+        <span class="brand-mark">G</span>
+        <span class="brand-text">
+          <strong>GEDIV</strong>
+          <small>SEAD · Paraíba</small>
+        </span>
+      </a>
+      <span class="topbar-label">Central de Orientações</span>
     </div>
   </header>
 
-<div class="container">
-  <div class="notice">
-    <div class="notice-title">Atenção</div>
-    <div class="notice-text">
-      Este material possui caráter exclusivamente consultivo e informativo,
-      não constituindo documento hábil para fins de comprovação.
-    </div>
-  </div>
-</div>
+  <main>
+    <section class="welcome">
+      <div class="container welcome-inner">
+        <div class="welcome-copy">
+          <span class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            ORIENTAÇÃO AO SERVIDOR
+          </span>
+          <h1>Olá, servidor(a)!</h1>
+          <p class="welcome-lead">
+            Como podemos ajudar?
+          </p>
+          <p class="welcome-description">
+            Encontre informações sobre direitos, vantagens e procedimentos
+            funcionais dos servidores públicos estaduais.
+          </p>
 
-<main class="container main">
-  <section id="categories" class="categories" aria-label="Categorias"></section>
-   
-    <section class="results-head">
-      <div>
-        <h2 id="sectionTitle">Perguntas frequentes</h2>
-        <p id="resultCount"></p>
+          <label class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.8" cy="10.8" r="6.8"></circle>
+              <path d="m16 16 4.2 4.2"></path>
+            </svg>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Busque por assunto ou palavra-chave..."
+              autocomplete="off"
+            >
+          </label>
+          <p class="search-hint">Ex.: progressão, abono, licença...</p>
+        </div>
+
+        <div class="welcome-aside" aria-hidden="true">
+          <div class="aside-shape shape-one"></div>
+          <div class="aside-shape shape-two"></div>
+          <div class="aside-note">
+            <span class="note-symbol">i</span>
+            <div>
+              <strong>Informação que orienta</strong>
+              <p>Consulte as orientações e conheça os procedimentos.</p>
+            </div>
+          </div>
+          <span class="aside-line"></span>
+        </div>
       </div>
-      <button id="clearFilter" class="text-button" hidden>Limpar filtro</button>
     </section>
 
-    <section id="faqList" class="faq-list" aria-live="polite"></section>
+    <div class="container">
+      <aside class="notice">
+        <span class="notice-icon" aria-hidden="true">!</span>
+        <div>
+          <strong class="notice-title">Importante</strong>
+          <p class="notice-text">
+            Este material possui caráter exclusivamente consultivo e
+            informativo, não constituindo documento hábil para fins de
+            comprovação.
+          </p>
+        </div>
+      </aside>
+    </div>
 
-    <div id="emptyState" class="empty" hidden>
-      <h3>Nenhuma pergunta encontrada</h3>
-      <p>Tente outro termo ou escolha uma categoria.</p>
+    <div class="container main-layout">
+      <aside class="sidebar">
+        <div class="sidebar-heading">
+          <span class="sidebar-kicker">NAVEGAÇÃO</span>
+          <h2>Explore os assuntos</h2>
+          <p>Selecione uma categoria para encontrar orientações específicas.</p>
+        </div>
+
+        <section
+          id="categories"
+          class="categories"
+          aria-label="Categorias"
+        ></section>
+
+        <div class="sidebar-help">
+          <span class="help-mark" aria-hidden="true">?</span>
+          <div>
+            <strong>Não encontrou sua dúvida?</strong>
+            <p>Use a busca para procurar por outro termo.</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <section class="results-head">
+          <div>
+            <span class="section-kicker">CENTRAL DE INFORMAÇÕES</span>
+            <h2 id="sectionTitle">Perguntas frequentes</h2>
+            <p id="resultCount"></p>
+          </div>
+          <button id="clearFilter" class="text-button" hidden>
+            Limpar filtro
+          </button>
+        </section>
+
+        <section id="faqList" class="faq-list" aria-live="polite"></section>
+
+        <div id="emptyState" class="empty" hidden>
+          <h3>Nenhuma pergunta encontrada</h3>
+          <p>Tente outro termo ou escolha uma categoria.</p>
+        </div>
+      </section>
     </div>
   </main>
 
   <footer>
-    <div class="container">
-      <span>Central de Orientações GEDIV</span>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-mark">G</span>
+        <div>
+          <strong>Central de Orientações GEDIV</strong>
+          <p>Gerência Executiva de Concessão de Direitos e Vantagens</p>
+        </div>
+      </div>
+      <span class="footer-note">SEAD · Governo da Paraíba</span>
     </div>
   </footer>
 
