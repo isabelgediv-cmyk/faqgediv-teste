@@ -1,3 +1,4 @@
+
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGl48MRFhtfZLirpHIvW9ySawBxitDg0w5m6wHLqo4KnJTXUHd-M-OA1mr9gpl0whhonMwvw0cZojj/pub?gid=1686832610&single=true&output=csv";
 
 let DATA = [];
@@ -31,15 +32,10 @@ function parseCSV(text) {
       cell = "";
     } else if ((char === "\n" || char === "\r") && !insideQuotes) {
       if (char === "\r" && next === "\n") i++;
-
       row.push(cell);
-      cell = "";
-
-      if (row.some(value => value.trim() !== "")) {
-        rows.push(row);
-      }
-
+      if (row.some(value => value.trim() !== "")) rows.push(row);
       row = [];
+      cell = "";
     } else {
       cell += char;
     }
@@ -47,9 +43,7 @@ function parseCSV(text) {
 
   if (cell !== "" || row.length > 0) {
     row.push(cell);
-    if (row.some(value => value.trim() !== "")) {
-      rows.push(row);
-    }
+    if (row.some(value => value.trim() !== "")) rows.push(row);
   }
 
   return rows;
@@ -84,7 +78,6 @@ function loadCSV(text) {
   }
 
   const headers = rows[0].map(normalize);
-
   const categoriaIndex = headers.findIndex(h => h === "categoria");
   const perguntaIndex = headers.findIndex(h => h === "pergunta");
   const respostaIndex = headers.findIndex(h => h === "resposta");
@@ -109,22 +102,24 @@ function getCategories() {
   ];
 }
 
-function renderCategories() {
-  const categories = getCategories();
+function updateClearButton() {
+  const hasFilter = activeCategory !== "Todas" || searchInput.value.trim() !== "";
+  clearFilter.hidden = !hasFilter;
+}
 
-  categoriesEl.innerHTML = categories.map(category => `
+function renderCategories() {
+  categoriesEl.innerHTML = getCategories().map(category => `
     <button
+      type="button"
       class="category ${category === activeCategory ? "active" : ""}"
       data-category="${escapeHtml(category)}"
-    >
-      ${escapeHtml(category)}
-    </button>
+      aria-pressed="${category === activeCategory}"
+    >${escapeHtml(category)}</button>
   `).join("");
 
-  document.querySelectorAll(".category").forEach(button => {
+  categoriesEl.querySelectorAll(".category").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
-      searchInput.value = "";
       renderCategories();
       render();
 
@@ -141,65 +136,62 @@ function getFiltered() {
 
   return DATA.filter(item => {
     const matchesCategory =
-      activeCategory === "Todas" ||
-      item.categoria === activeCategory;
+      activeCategory === "Todas" || item.categoria === activeCategory;
 
     const searchableText = normalize(
       `${item.categoria} ${item.pergunta} ${item.resposta}`
     );
 
-    const matchesSearch =
-      !search || searchableText.includes(search);
-
-    return matchesCategory && matchesSearch;
+    return matchesCategory && (!search || searchableText.includes(search));
   });
 }
 
 function render() {
   const filtered = getFiltered();
 
-  resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? "resultado" : "resultados"}`;
+  resultCount.textContent =
+    `${filtered.length} ${filtered.length === 1 ? "resultado" : "resultados"}`;
 
-  if (activeCategory === "Todas") {
-    sectionTitle.textContent = "Perguntas frequentes";
-  } else {
-    sectionTitle.textContent = activeCategory;
-  }
+  sectionTitle.textContent =
+    activeCategory === "Todas" ? "Perguntas frequentes" : activeCategory;
+
+  updateClearButton();
 
   if (filtered.length === 0) {
     faqList.innerHTML = "";
-    emptyState.style.display = "block";
+    emptyState.hidden = false;
     return;
   }
 
-  emptyState.style.display = "none";
+  emptyState.hidden = true;
 
-  faqList.innerHTML = filtered.map((item, index) => `
+  faqList.innerHTML = filtered.map(item => `
     <article class="faq-item">
-      <button class="faq-question" aria-expanded="false">
+      <button
+        type="button"
+        class="faq-question"
+        aria-expanded="false"
+      >
         <span>${escapeHtml(item.pergunta)}</span>
-        <span class="faq-icon">+</span>
+        <span class="chevron" aria-hidden="true">⌄</span>
       </button>
-
       <div class="faq-answer">
-        <div class="faq-answer-content">
-          ${formatAnswer(item.resposta)}
-        </div>
+        ${formatAnswer(item.resposta)}
       </div>
     </article>
   `).join("");
 
-  document.querySelectorAll(".faq-question").forEach(button => {
+  faqList.querySelectorAll(".faq-question").forEach(button => {
     button.addEventListener("click", () => {
       const item = button.closest(".faq-item");
-      const isOpen = item.classList.contains("open");
+      const willOpen = !item.classList.contains("open");
 
-      document.querySelectorAll(".faq-item.open").forEach(openItem => {
+      faqList.querySelectorAll(".faq-item.open").forEach(openItem => {
         openItem.classList.remove("open");
         openItem.querySelector(".faq-question").setAttribute("aria-expanded", "false");
       });
 
-      if (!isOpen) {
+      if (willOpen) {
         item.classList.add("open");
         button.setAttribute("aria-expanded", "true");
       }
@@ -215,24 +207,24 @@ async function loadData() {
       throw new Error("Não foi possível acessar a planilha.");
     }
 
-    const csv = await response.text();
-    DATA = loadCSV(csv);
+    DATA = loadCSV(await response.text());
 
     renderCategories();
     render();
-
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao carregar o FAQ:", error);
 
-    // Mantém o site funcionando com os dados antigos
-    // caso a planilha esteja temporariamente indisponível.
-    if (Array.isArray(window.FAQ_DATA)) {
+    if (Array.isArray(window.FAQ_DATA) && window.FAQ_DATA.length > 0) {
       DATA = window.FAQ_DATA;
       renderCategories();
       render();
     } else {
+      resultCount.textContent = "";
       faqList.innerHTML = "";
-      emptyState.style.display = "block";
+      emptyState.hidden = false;
+      emptyState.querySelector("h3").textContent = "Não foi possível carregar as perguntas";
+      emptyState.querySelector("p").textContent =
+        "Atualize a página ou tente novamente mais tarde.";
     }
   }
 }
