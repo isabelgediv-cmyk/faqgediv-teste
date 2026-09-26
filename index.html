@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Central de Orientações | GEDIV</title>
+  <meta name="description" content="Central de perguntas e respostas da GEDIV.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <div class="brand">Gerência Executiva de Concessão de Direitos e Vantagens</div>
+      <h1>Central de Orientações</h1>
+      <p>Encontre respostas para as dúvidas mais frequentes.</p>
+
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Digite uma dúvida ou palavra-chave..." autocomplete="off">
+      </label>
+    </div>
+  </header>
+
+<div class="container">
+  <div class="notice">
+    <div class="notice-title">Atenção</div>
+    <div class="notice-text">
+      Este material possui caráter exclusivamente consultivo e informativo,
+      não constituindo documento hábil para fins de comprovação.
+    </div>
+  </div>
+</div>
+
+<main class="container main">
+  <section id="categories" class="categories" aria-label="Categorias"></section>
+   
+    <section class="results-head">
+      <div>
+        <h2 id="sectionTitle">Perguntas frequentes</h2>
+        <p id="resultCount"></p>
+      </div>
+      <button id="clearFilter" class="text-button" hidden>Limpar filtro</button>
+    </section>
+
+    <section id="faqList" class="faq-list" aria-live="polite"></section>
+
+    <div id="emptyState" class="empty" hidden>
+      <h3>Nenhuma pergunta encontrada</h3>
+      <p>Tente outro termo ou escolha uma categoria.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>Central de Orientações GEDIV</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
